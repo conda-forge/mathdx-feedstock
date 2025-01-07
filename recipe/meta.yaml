@@ -1,25 +1,34 @@
-{% set version = "24.04.0" %}
-{% set number = 1 %}
+{% set version = "24.08.0" %}
+{% set number = 2 %}
+
+{% set major_version = version.split(".")[0] %}
+{% set minor_version = version.split(".")[1] %}
 
 package:
   name: mathdx
   version: {{ version }}
 
 source:
-  - url: https://files.pythonhosted.org/packages/py3/n/nvidia-mathdx/nvidia_mathdx-24.4.0-py3-none-any.whl
-    sha256: 5be02c90487816c9e4f5aceb13f1466edb7e2c86608bf04eec5079e148667179
+  - url: https://developer.download.nvidia.com/compute/cuFFTDx/redist/cuFFTDx/nvidia-mathdx-{{ version }}.tar.gz
+    sha256: 66e4a0a1d15969c6b099e15e6f89a89a378b630b8ec7dca18f3e573bf403e0a2
 
 build:
   number: {{ number }}
   skip: true  # [not (linux64 or aarch64)]
   script:
-    - cp -r $SRC_DIR/nvidia/mathdx/include/* $PREFIX/include/      # [linux]
-    - cp $SRC_DIR/nvidia_mathdx-*.dist-info/LICENSE.txt $SRC_DIR/  # [linux]
+    - cp -r $SRC_DIR/nvidia/mathdx/{{ major_version }}.{{ minor_version }}/include/* $PREFIX/include/  # [linux]
+    - cp -r $SRC_DIR/nvidia/mathdx/{{ major_version }}.{{ minor_version }}/lib/* $PREFIX/lib/          # [linux]
+    - cp $SRC_DIR/nvidia/mathdx/{{ major_version }}.{{ minor_version }}/LICENSE.txt $SRC_DIR/          # [linux]
+    - sed -i -E 's/(set_and_check\(mathdx_INCLUDE_DIRS?).*/\1 "${CMAKE_CURRENT_LIST_DIR}\/..\/..\/..\/include")/' $PREFIX/lib/cmake/mathdx/mathdx-config.cmake  # [linux]
+    - sed -i -E 's/(set_and_check\(cublasdx_INCLUDE_DIRS?).*/\1 "${CMAKE_CURRENT_LIST_DIR}\/..\/..\/..\/include")/' $PREFIX/include/cublasdx/lib/cmake/cublasdx/cublasdx-config.cmake  # [linux]
+    - sed -i -E 's/(INTERFACE_INCLUDE_DIRECTORIES).*/\1 "${CMAKE_CURRENT_LIST_DIR}\/..\/..\/..\/include"/' $PREFIX/include/cublasdx/lib/cmake/cublasdx/cublasdx-targets.cmake  # [linux]
+    - sed -i -E 's/(INTERFACE_INCLUDE_DIRECTORIES).*/\1 "${CMAKE_CURRENT_LIST_DIR}\/..\/..\/..\/include"/' $PREFIX/lib/cmake/mathdx/mathdx-targets.cmake  # [linux]
 
 requirements:
   build:
   host:
-    - cutlass 3.3.0
+    # TODO: parse version of cutlass from sources
+    - cutlass 3.5.1
   run:
     - {{ pin_compatible("cutlass", max_pin="x.x") }}
   run_constrained:
@@ -29,11 +38,12 @@ test:
   requires:
     - tree  # [linux]
   commands:
-    - test -f $PREFIX/include/cufftdx.hpp   # [linux]
-    - test -f $PREFIX/include/cublasdx.hpp  # [linux]
-    - test -d $PREFIX/include/cufftdx       # [linux]
-    - test -d $PREFIX/include/cublasdx      # [linux]  
-    - tree $PREFIX/include/                 # [linux]
+    - test -f $PREFIX/include/cufftdx.hpp                   # [linux]
+    - test -f $PREFIX/include/cublasdx.hpp                  # [linux]
+    - test -f $PREFIX/lib/cmake/mathdx/mathdx-config.cmake  # [linux]
+    - test -d $PREFIX/include/cufftdx                       # [linux]
+    - test -d $PREFIX/include/cublasdx                      # [linux]
+    - tree $PREFIX/include/                                 # [linux]
 
 
 about:
