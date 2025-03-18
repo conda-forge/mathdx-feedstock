@@ -37,6 +37,11 @@ requirements:
 test:
   requires:
     - tree  # [linux]
+    - {{ compiler("c") }}  # [linux]
+    - {{ compiler("cxx") }}  # [linux]
+    - {{ stdlib("c") }}  # [linux]
+    - cmake  # [linux]
+    - ninja  # [linux]
   commands:
     - test -f $PREFIX/include/cufftdx.hpp                   # [linux]
     - test -f $PREFIX/include/cublasdx.hpp                  # [linux]
@@ -44,6 +49,8 @@ test:
     - test -d $PREFIX/include/cufftdx                       # [linux]
     - test -d $PREFIX/include/cublasdx                      # [linux]
     - tree $PREFIX/include/                                 # [linux]
+    - cmake ${CMAKE_ARGS} -GNinja test                      # [linux]
+    - cmake --build .                                       # [linux]
 
 
 about:
