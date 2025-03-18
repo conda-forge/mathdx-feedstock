@@ -7,6 +7,7 @@ set(ALL_MATHDX_TARGETS
     mathdx::cublasdx
     mathdx::cufftdx
     mathdx::cusolverdx
+    mathdx::curanddx
 )
 
 add_executable(c_all_headers all_headers.c)
