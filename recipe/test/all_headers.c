@@ -4,8 +4,11 @@
  *
  */
 
- #include <nvpl_blas.h>
+#include <cublasdx.hpp>
+#include <cufftdx.hpp>
+#include <curanddx.hpp>
+#include <cusolverdx.hpp>
 
- int main(int argc, char *argv[]) {
-     return 0;
- }
+int main(int argc, char *argv[]) {
+    return 0;
+}

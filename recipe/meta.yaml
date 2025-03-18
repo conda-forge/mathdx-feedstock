@@ -35,6 +35,8 @@ requirements:
     - cuda-version >=11.0.*,<13.a0  # mathdx supports both CUDA majors
 
 test:
+  files:
+    - test
   requires:
     - tree  # [linux]
     - {{ compiler("c") }}  # [linux]
