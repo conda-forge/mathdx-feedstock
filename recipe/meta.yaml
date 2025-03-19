@@ -1,5 +1,5 @@
 {% set version = "24.08.0" %}
-{% set number = 2 %}
+{% set number = 0 %}
 {% set min_cutlass_version = "3.5.1" %}
 
 {% set major_version = version.split(".")[0] %}
