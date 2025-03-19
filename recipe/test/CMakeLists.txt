@@ -1,20 +1,19 @@
 cmake_minimum_required(VERSION 3.12)
-project(all_headers VERSION 0.1 LANGUAGES C CXX)
+project(verify_headers VERSION 0.1 LANGUAGES CUDA)
 
-find_package(mathdx REQUIRED COMPONENTS cublasdx CONFIG)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 
-set(ALL_MATHDX_TARGETS
+find_package(mathdx REQUIRED COMPONENTS
+    cublasdx cufftdx CONFIG)
+
+add_executable(cu_all_headers all_headers.cu)
+set_target_properties(cu_all_headers PROPERTIES CUDA_ARCHITECTURES "89")
+
+target_link_libraries(cu_all_headers PUBLIC 
     mathdx::cublasdx
     mathdx::cufftdx
-    mathdx::cusolverdx
-    mathdx::curanddx
 )
 
-add_executable(c_all_headers all_headers.c)
-target_link_libraries(c_all_headers PUBLIC ${ALL_NVPL_TARGETS})
-
-add_executable(cxx_all_headers all_headers.cxx)
-target_link_libraries(cxx_all_headers PUBLIC ${ALL_NVPL_TARGETS})
-
 include(GNUInstallDirs)
-install(TARGETS c_all_headers cxx_all_headers RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+install(TARGETS cu_all_headers RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})

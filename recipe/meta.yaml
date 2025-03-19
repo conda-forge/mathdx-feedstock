@@ -23,11 +23,12 @@ build:
     - sed -i -E 's/(set_and_check\(cublasdx_INCLUDE_DIRS?).*/\1 "${CMAKE_CURRENT_LIST_DIR}\/..\/..\/..\/include")/' $PREFIX/include/cublasdx/lib/cmake/cublasdx/cublasdx-config.cmake  # [linux]
     - sed -i -E 's/(INTERFACE_INCLUDE_DIRECTORIES).*/\1 "${CMAKE_CURRENT_LIST_DIR}\/..\/..\/..\/include"/' $PREFIX/include/cublasdx/lib/cmake/cublasdx/cublasdx-targets.cmake  # [linux]
     - sed -i -E 's/(INTERFACE_INCLUDE_DIRECTORIES).*/\1 "${CMAKE_CURRENT_LIST_DIR}\/..\/..\/..\/include"/' $PREFIX/lib/cmake/mathdx/mathdx-targets.cmake  # [linux]
+    - sed -i -E '/set_and_check\(mathdx_inc_CUTLASS_ROOT/d' $PREFIX/lib/cmake/mathdx/mathdx-config.cmake  # [linux]
+    - sed -i -E '/set_and_check\(mathdx_inc_CUTLASS_INCLUDE_DIR/d' $PREFIX/lib/cmake/mathdx/mathdx-config.cmake  # [linux]
 
 requirements:
   build:
   host:
-    # TODO: parse version of cutlass from sources
     - cutlass 3.5.1
   run:
     - {{ pin_compatible("cutlass", max_pin="x.x") }}
@@ -42,6 +43,7 @@ test:
     - {{ compiler("c") }}  # [linux]
     - {{ compiler("cxx") }}  # [linux]
     - {{ stdlib("c") }}  # [linux]
+    - cuda-nvcc  # [linux]
     - cmake  # [linux]
     - ninja  # [linux]
   commands:
