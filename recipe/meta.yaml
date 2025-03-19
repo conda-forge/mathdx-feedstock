@@ -45,7 +45,7 @@ test:
     - {{ compiler("c") }}  # [linux]
     - {{ compiler("cxx") }}  # [linux]
     - {{ stdlib("c") }}  # [linux]
-    - cuda-nvcc  # [linux]
+    - {{ compiler("cuda") }}  # [linux]
     - cmake  # [linux]
     - ninja  # [linux]
     # Testing that the minimal supported version is correct
