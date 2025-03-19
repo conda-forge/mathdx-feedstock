@@ -15,7 +15,6 @@ source:
 
 build:
   number: {{ number }}
-  skip: True  # [not linux64]
   noarch: generic
   script:
     - cp -r $SRC_DIR/nvidia/mathdx/{{ major_version }}.{{ minor_version }}/include/* $PREFIX/include/  # [linux]
