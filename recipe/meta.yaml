@@ -1,5 +1,6 @@
 {% set version = "24.08.0" %}
 {% set number = 2 %}
+{% set min_cutlass_version = "3.5.1" %}
 
 {% set major_version = version.split(".")[0] %}
 {% set minor_version = version.split(".")[1] %}
@@ -14,7 +15,8 @@ source:
 
 build:
   number: {{ number }}
-  skip: true  # [not (linux64 or aarch64)]
+  skip: True  # [not linux64]
+  noarch: generic
   script:
     - cp -r $SRC_DIR/nvidia/mathdx/{{ major_version }}.{{ minor_version }}/include/* $PREFIX/include/  # [linux]
     - cp -r $SRC_DIR/nvidia/mathdx/{{ major_version }}.{{ minor_version }}/lib/* $PREFIX/lib/          # [linux]
@@ -29,9 +31,10 @@ build:
 requirements:
   build:
   host:
-    - cutlass 3.5.1
+    - cutlass {{ min_cutlass_version }}
   run:
-    - {{ pin_compatible("cutlass", max_pin="x.x") }}
+    - __unix
+    - {{ pin_compatible("cutlass", max_pin="x") }}
   run_constrained:
     - cuda-version >=11.0.*,<13.a0  # mathdx supports both CUDA majors
 
@@ -46,6 +49,8 @@ test:
     - cuda-nvcc  # [linux]
     - cmake  # [linux]
     - ninja  # [linux]
+    # Testing that the minimal supported version is correct
+    - cutlass {{ min_cutlass_version }}
   commands:
     - test -f $PREFIX/include/cufftdx.hpp                   # [linux]
     - test -f $PREFIX/include/cublasdx.hpp                  # [linux]
