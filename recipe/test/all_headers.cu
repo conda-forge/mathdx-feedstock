@@ -6,6 +6,9 @@
 
 #include <cublasdx.hpp>
 #include <cufftdx.hpp>
+#include <curanddx.hpp>
+#include <cusolverdx.hpp>
+#include <nvcompdx.hpp>
 
 int main(int argc, char *argv[]) {
     return 0;
