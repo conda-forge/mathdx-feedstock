@@ -19,8 +19,6 @@ source:
 build:
   number: {{ number }}
   noarch: generic
-  # cuda is only for tests, so we don't want to build multiple variants
-  skip: true  # [(not linux) or (not (cuda_compiler_version or "").startswith("1"))]
   script:
     - cp -vr $SRC_DIR/nvidia/mathdx/{{ major_version }}.{{ minor_version }}/include/* $PREFIX/include/  # [linux]
     - cp -vr $SRC_DIR/nvidia/mathdx/{{ major_version }}.{{ minor_version }}/lib/* $PREFIX/lib/          # [linux]
