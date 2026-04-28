@@ -1,6 +1,6 @@
-{% set version = "25.12.1" %}
+{% set version = "26.03.0" %}
 {% set number = 0 %}
-{% set min_cutlass_version = "4.2.*" %}
+{% set min_cutlass_version = "4.4.1.*" %}
 {% set min_cmake_version = "3.30.*" %}
 
 {% set major_version = version.split(".")[0] %}
@@ -11,12 +11,11 @@ package:
   version: {{ version }}
 
 source:
-  - url: https://developer.nvidia.com/downloads/compute/cublasdx/redist/cublasdx/cuda12/nvidia-mathdx-{{ version }}-cuda12.tar.gz  # [(cuda_compiler_version or "None").startswith("12")]
-    sha256: d905fb32e4baafe7f6cd3ad94ac194d86dcf463481f37221da972b2784fa73ac  # [(cuda_compiler_version or "None").startswith("12")]
   - url: https://developer.nvidia.com/downloads/compute/cublasdx/redist/cublasdx/cuda13/nvidia-mathdx-{{ version }}-cuda13.tar.gz  # [(cuda_compiler_version or "None").startswith("13")]
-    sha256: 96fae3ecea2072044e8724fc539fe15cbc32cd30734ae05db52ab992719ecaf0  # [(cuda_compiler_version or "None").startswith("13")]
+    sha256: 95c274405102f6a263f79eb04447bd7539f66ce649779bd8e225fcb8cc71594d  # [(cuda_compiler_version or "None").startswith("13")]
 
 build:
+  skip: true  # [not (cuda_compiler_version or "None").startswith("13")]
   number: {{ number }}
   noarch: generic
   script:
@@ -42,7 +41,6 @@ requirements:
     - {{ pin_compatible("cutlass", max_pin="x") }}
   run_constrained:
     - {{ pin_compatible("cuda-version", min_pin='x', max_pin='x') }}
-    - cuda-version >=12.6
     - cmake >={{ min_cmake_version }}
 
 test:
