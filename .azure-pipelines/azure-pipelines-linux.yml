@@ -8,14 +8,11 @@ jobs:
     vmImage: ubuntu-latest
   strategy:
     matrix:
-      linux_64_c_compiler_version13cuda_compiler_version13._cxx_compiler_version13:
-        CONFIG: linux_64_c_compiler_version13cuda_compiler_version13._cxx_compiler_version13
+      linux_64_cuda_compiler_version13._:
+        CONFIG: linux_64_cuda_compiler_version13._
         UPLOAD_PACKAGES: 'True'
         DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
-      linux_64_c_compiler_version14cuda_compiler_version12._cxx_compiler_version14:
-        CONFIG: linux_64_c_compiler_version14cuda_compiler_version12._cxx_compiler_version14
-        UPLOAD_PACKAGES: 'True'
-        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
+        store_build_artifacts: false
   timeoutInMinutes: 360
   variables: {}
 
